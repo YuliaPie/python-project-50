@@ -14,6 +14,8 @@ package-install:
 	python3 -m pip install --user dist/*.whl
 
 reinstall:
+        poetry build
+        poetry publish --dry-run
 	python3 -m pip install --user dist/*.whl --force-reinstall
 
 lint:
