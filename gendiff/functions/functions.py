@@ -1,11 +1,13 @@
 import json
 import yaml
-import argparse
 
+# import argparse
 
+"""
 parser = argparse.ArgumentParser(description="Contains functions")
 parser.add_argument("-F", "--formatter", default="stylish")
 args = parser.parse_args()
+"""
 
 
 def generate_diff(path1, path2):
@@ -52,7 +54,7 @@ def convert_to_dict(file):
 
 
 def stylish(dict_diff: dict):
-    pretty_dict_diff = json.dumps((dict_diff), indent=4)
+    pretty_dict_diff = json.dumps(dict_diff, indent=4)
     diff_str = str(pretty_dict_diff)
     diff_str = diff_str.replace('"', "")
     diff_str = diff_str.replace(',\n', "\n")
