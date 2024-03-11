@@ -7,7 +7,8 @@ def add_status_parents(dict_diff):
     keys = dict_diff.keys()
     for key in keys:
         value = dict_diff.get(key)
-        new_key = f"{dict_diff.get("parent", "")}.{key[2::]}"
+        parent = dict_diff.get("parent", "")
+        new_key = f"{parent}.{key[2::]}"
         if "- " in key:
             new_dict[new_key] = {'value': value, 'status': 'removed'}
         if "+ " in key:
