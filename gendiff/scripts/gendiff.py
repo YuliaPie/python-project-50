@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-from gendiff.functions.functions import generate_diff
+from gendiff.functions.comparator import generate_diff
 
 
 def main():
@@ -9,10 +9,10 @@ def main():
                                                  "difference.")
     parser.add_argument("first_file")
     parser.add_argument("second_file")
-    parser.add_argument("-f", "--format", help="set format of output")
-    parser.add_argument("-F", "--formatter", default="stylish")
+    parser.add_argument("-f", "--format",
+                        help="set format of output", default="stylish")
     args = parser.parse_args()
-    print(generate_diff(args.first_file, args.second_file))
+    print(generate_diff(args.first_file, args.second_file, args.format))
 
 
 if __name__ == '__main__':

@@ -1,20 +1,17 @@
 import json
 import yaml
-
-# import argparse
-
-"""
-parser = argparse.ArgumentParser(description="Contains functions")
-parser.add_argument("-F", "--formatter", default="stylish")
-args = parser.parse_args()
-"""
+from gendiff.functions.plain_formatter import plain
+from gendiff.functions.stylish_formatter import stylish
 
 
-def generate_diff(path1, path2):
+def generate_diff(path1, path2, format_name="stylish"):
     dict1 = convert_to_dict(path1)
     dict2 = convert_to_dict(path2)
     dict_diff = compare_dicts(dict1, dict2)
-    return stylish(dict_diff)
+    if format_name == "stylish":
+        return stylish(dict_diff)
+    if format_name == "plain":
+        return plain(dict_diff)
 
 
 def compare_dicts(dict1, dict2):
@@ -51,23 +48,3 @@ def convert_to_dict(file):
         return yaml.load(file, Loader=yaml.Loader)
     if extension == "json":
         return json.load(open(file))
-
-
-def stylish(dict_diff: dict):
-    pretty_dict_diff = json.dumps(dict_diff, indent=4)
-    diff_str = str(pretty_dict_diff)
-    diff_str = diff_str.replace('"', "")
-    diff_str = diff_str.replace(',\n', "\n")
-    diff_str = move_left(diff_str)
-    diff_str = diff_str.replace('*', " ")
-    return diff_str
-
-
-def move_left(styled_string):
-    lines = styled_string.split("\n")
-    new_lines = []
-    for line in lines:
-        if "**" in line or "+ " in line or "- " in line:
-            line = line[2::]
-        new_lines.append(line)
-    return "\n".join(new_lines)
