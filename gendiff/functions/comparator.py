@@ -12,6 +12,8 @@ def generate_diff(path1, path2, format_name="stylish"):
         return stylish(dict_diff)
     if format_name == "plain":
         return plain(dict_diff)
+    if format_name == "json":
+        return json.dumps(delete_asterisk(dict_diff), indent=2)
 
 
 def compare_dicts(dict1, dict2):
@@ -48,3 +50,15 @@ def convert_to_dict(file):
         return yaml.load(file, Loader=yaml.Loader)
     if extension == "json":
         return json.load(open(file))
+
+
+def delete_asterisk(dict_diff):
+    keys = dict_diff.keys()
+    dict_no_aster = {}
+    for key in keys:
+        value = dict_diff[key]
+        if isinstance(value, dict):
+            dict_no_aster[key.replace('*', " ")] = delete_asterisk(value)
+        else:
+            dict_no_aster[key.replace('*', " ")] = value
+    return dict_no_aster
