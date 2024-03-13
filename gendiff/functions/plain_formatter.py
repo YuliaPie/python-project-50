@@ -1,32 +1,37 @@
 def plain(dict_diff: dict):
-    return form_string(add_status_parents(dict_diff))
+    return add_parents(dict_diff)
+    #return form_string(add_parents(dict_diff))
 
 
-def add_status_parents(dict_diff):
+def add_parents(dict_diff):
     new_dict = {}
     keys = dict_diff.keys()
     for key in keys:
-        value = dict_diff.get(key)
-        parent = dict_diff.get("parent", "")
-        new_key = f"{parent}.{key[2::]}"
-        if "- " in key:
-            new_dict[new_key] = {'value': value, 'status': 'removed'}
-        if "+ " in key:
-            if new_key in new_dict:
-                new_dict[new_key].update({'new_value': value,
-                                          'status': 'updated'})
-            else:
-                new_dict[new_key] = {'value': value, 'status': 'added'}
-        if "**" in key and isinstance(value, dict):
-            value.update({'parent': new_key})
-            new_dict.update(add_status_parents(value))
+        parent = dict_diff[key].get("parent", "")
+        new_key = f"{parent}.{key}"
+        if dict_diff[key]["status"] != "updated_dict":
+            new_dict[key] = dict_diff[key]
+        if dict_diff[key]["status"] == "updated_dict":
+            new_dict[key] = dict_diff[key].update({'parent': new_key})
+            new_dict.update(add_parents(dict_diff[key]["value"]))
     return new_dict
+
+"""
+        parent = dict_diff[key].get("parent", "")
+        new_key = f"{parent}.{key}"
+        if not isinstance(dict_diff[key]["value"], dict):
+            new_dict[new_key] = {'value': dict_diff[key]["value"], 'status': dict_diff[key]["status"]}
+        if isinstance(dict_diff[key]["value"], dict):
+            dict_diff[key]["value"].update({'parent': new_key})
+            new_dict.update(add_parents(dict_diff[key]["value"]))
+
+
 
 
 def form_string(dict_diff: dict):
     strings = []
     for k, v in dict_diff.items():
-        property = k[1::]
+        property = v['parent'][1::] + k
         status = v['status']
         value = uniform_value(v['value'])
         string = f"Property '{property}' was {status}"
@@ -50,3 +55,4 @@ def uniform_value(value):
         return "[complex value]"
     else:
         return f"'{value}'"
+"""
