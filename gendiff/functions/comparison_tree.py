@@ -22,14 +22,31 @@ def compare_dicts(dict1, dict2):
 def get_name(node):
     return node["name"]
 
-
-def get_children(node):
-    return node.get("children")
-
-
-def is_leaf(node):
-    return "children" in node
+    def get_children(node):
+        return node.get("children")
 
 
 def is_inner(node):
-    return "children" not in node
+    return "children" in node
+
+
+def is_leaf(node):
+    return not "children" in node
+
+
+def print_children(tree): # доработать
+    def walk(nod, path):
+        for child in nod:
+            # if path!="":
+            print(path)
+            child.update({"path": path})
+            path = f"{path}.{get_name(child)}"
+            # if is_leaf(child):
+            #    path=""
+            print(child)
+            print("children" in child)
+            print(path)
+            if isinstance(get_children(child), list):
+                walk(get_children(child), path)
+
+    return walk(tree, "")
