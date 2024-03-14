@@ -1,20 +1,21 @@
 def plain(dict_diff: dict):
+    # return dict_diff
     return add_parents(dict_diff)
-    #return form_string(add_parents(dict_diff))
+    # return form_string(add_parents(dict_diff))
 
 
 def add_parents(dict_diff):
-    new_dict = {}
     keys = dict_diff.keys()
     for key in keys:
-        parent = dict_diff[key].get("parent", "")
-        new_key = f"{parent}.{key}"
-        if dict_diff[key]["status"] != "updated_dict":
-            new_dict[key] = dict_diff[key]
-        if dict_diff[key]["status"] == "updated_dict":
-            new_dict[key] = dict_diff[key].update({'parent': new_key})
-            new_dict.update(add_parents(dict_diff[key]["value"]))
-    return new_dict
+        if isinstance(dict_diff[key], dict):
+            if "parent" in dict_diff and isinstance(dict_diff[key]["value"], dict):
+                dict_diff[key]["value"]["parent"] = [dict_diff[key].get("parent","")] + [key]
+            if "parent" not in dict_diff:
+                dict_diff[key]["parent"] = [key]
+            if dict_diff[key].get("value") and isinstance(dict_diff[key]["value"], dict):
+                add_parents(dict_diff[key]["value"])
+    return dict_diff
+
 
 """
         parent = dict_diff[key].get("parent", "")

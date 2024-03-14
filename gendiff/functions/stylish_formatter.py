@@ -2,6 +2,9 @@ import json
 
 
 def stylish(dict_diff: dict):
+    return dict_diff
+    return json.dumps(dict_diff, indent=4)
+"""
     pretty_dict_diff = json.dumps(add_prefix(dict_diff), indent=4)
     diff_str = str(pretty_dict_diff)
     diff_str = diff_str.replace('"', "")
@@ -9,7 +12,7 @@ def stylish(dict_diff: dict):
     diff_str = move_left(diff_str)
     diff_str = diff_str.replace('*', " ")
     return diff_str
-    return pretty_dict_diff
+"""
 def add_prefix(dict_diff):
     new_dict ={}
     keys = dict_diff.keys()
