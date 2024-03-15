@@ -1,30 +1,16 @@
 def plain(dict_diff: dict):
-    # return dict_diff
-    return add_parents(dict_diff)
-    # return form_string(add_parents(dict_diff))
+    return add_path(dict_diff)
 
-
-def add_parents(dict_diff):
-    keys = dict_diff.keys()
-    for key in keys:
-        if isinstance(dict_diff[key], dict):
-            if "parent" in dict_diff and isinstance(dict_diff[key]["value"], dict):
-                dict_diff[key]["value"]["parent"] = [dict_diff[key].get("parent","")] + [key]
-            if "parent" not in dict_diff:
-                dict_diff[key]["parent"] = [key]
-            if dict_diff[key].get("value") and isinstance(dict_diff[key]["value"], dict):
-                add_parents(dict_diff[key]["value"])
-    return dict_diff
-
-
-"""
-        parent = dict_diff[key].get("parent", "")
-        new_key = f"{parent}.{key}"
-        if not isinstance(dict_diff[key]["value"], dict):
-            new_dict[new_key] = {'value': dict_diff[key]["value"], 'status': dict_diff[key]["status"]}
-        if isinstance(dict_diff[key]["value"], dict):
-            dict_diff[key]["value"].update({'parent': new_key})
-            new_dict.update(add_parents(dict_diff[key]["value"]))
+def add_path(tree):
+    def walk_(nod, path, new_tree = []):
+        for child in nod:
+            new_path = f"{path}.{child['name']}"
+            child.update({"path": path})
+            new_tree.append(child)
+            if "children" in child:
+                walk_(child.get("children"), new_path)
+        return new_tree
+    return walk_(tree, "")
 
 
 
@@ -56,4 +42,3 @@ def uniform_value(value):
         return "[complex value]"
     else:
         return f"'{value}'"
-"""
