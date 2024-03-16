@@ -1,8 +1,9 @@
 def plain(dict_diff: dict):
-    return add_path(dict_diff)
+    return form_string(add_path(dict_diff))
+
 
 def add_path(tree):
-    def walk_(nod, path, new_tree = []):
+    def walk_(nod, path, new_tree=[]):
         for child in nod:
             new_path = f"{path}.{child['name']}"
             child.update({"path": path})
@@ -13,22 +14,27 @@ def add_path(tree):
     return walk_(tree, "")
 
 
-
-
-def form_string(dict_diff: dict):
+def form_string(nod):
     strings = []
-    for k, v in dict_diff.items():
-        property = v['parent'][1::] + k
-        status = v['status']
-        value = uniform_value(v['value'])
-        string = f"Property '{property}' was {status}"
-        if status == "added":
-            string += f" with value: {value}"
-        if status == "updated":
-            new_value = uniform_value(v.get('new_value'))
-            string += f". From {value} to {new_value}"
-        strings.append(string)
+    for child in nod:
+        property = delete_starting_dot(f"{child['path']}.{child['name']}")
+        status = child['status']
+        if status != "updated_dict" and status != "same":
+            string = f"Property '{property}' was {status}"
+            if status == "added":
+                string += f" with value: {uniform_value(child["value"])}"
+            if status == "updated":
+                string += (f". From {uniform_value(child["old_value"])} to "
+                           f"{uniform_value(child["new_value"])}")
+            strings.append(string)
     return "\n".join(strings)
+
+
+def delete_starting_dot(source_string):
+    if source_string[0] == ".":
+        return delete_starting_dot(source_string[1::])
+    else:
+        return source_string
 
 
 def uniform_value(value):

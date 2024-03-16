@@ -1,8 +1,10 @@
 import json
+from gendiff.functions.stylish_formatter import add_prefix_make_dict
 
 
 def to_json(dict_diff):
-    return json.dumps(delete_asterisk(dict_diff), indent=2)
+    return json.dumps(delete_asterisk(add_prefix_make_dict(dict_diff)),
+                      indent=2)
 
 
 def delete_asterisk(dict_diff):

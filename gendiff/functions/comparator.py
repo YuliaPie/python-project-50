@@ -3,6 +3,7 @@ import yaml
 from gendiff.functions.form_selector import select_formatter
 from gendiff.functions.comparison_tree import compare_dicts
 
+
 def generate_diff(path_to_file1, path_to_file2, format_name="stylish"):
     dict1 = get_dict(*get_data_and_extension(path_to_file1))
     dict2 = get_dict(*get_data_and_extension(path_to_file2))
