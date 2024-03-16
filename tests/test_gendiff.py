@@ -1,4 +1,4 @@
-from gendiff.functions.comparator import generate_diff
+from gendiff.scripts.gendiff import generate_diff
 
 
 file_stylish = open('./tests/fixtures/expected_stylish.txt', 'r')
