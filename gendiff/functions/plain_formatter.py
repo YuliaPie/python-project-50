@@ -46,6 +46,10 @@ def uniform_value(value):
         return "true"
     if value is None:
         return "null"
+    if value == 0:
+        return "0"
+    if value == "0":
+        return value
     if isinstance(value, dict):
         return "[complex value]"
     else:
