@@ -9,16 +9,16 @@ def add_prefix_make_dict(tree):
     new_dict = {}
     for nod in tree:
         if nod["status"] == 'updated':
-            new_dict[f"- {nod["name"]}"] = nod["old_value"]
-            new_dict[f"+ {nod["name"]}"] = nod["new_value"]
+            new_dict[f"- {nod['name']}"] = nod['old_value']
+            new_dict[f"+ {nod['name']}"] = nod["new_value"]
         if nod["status"] == 'same':
-            new_dict[f"**{nod["name"]}"] = nod["value"]
+            new_dict[f"**{nod['name']}"] = nod["value"]
         if nod["status"] == 'added':
-            new_dict[f"+ {nod["name"]}"] = nod["value"]
+            new_dict[f"+ {nod['name']}"] = nod["value"]
         if nod["status"] == 'removed':
-            new_dict[f"- {nod["name"]}"] = nod["value"]
+            new_dict[f"- {nod['name']}"] = nod["value"]
         if nod["status"] == 'updated_dict':
-            new_dict[f"**{nod["name"]}"] = add_prefix_make_dict(nod["children"])
+            new_dict[f"**{nod['name']}"] = add_prefix_make_dict(nod["children"])
     return new_dict
 
 
