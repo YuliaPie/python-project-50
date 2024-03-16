@@ -22,10 +22,12 @@ def form_string(nod):
         if status != "updated_dict" and status != "same":
             string = f"Property '{property}' was {status}"
             if status == "added":
-                string += f" with value: {uniform_value(child["value"])}"
+                value = uniform_value(child["value"])
+                string += f" with value: {value}"
             if status == "updated":
-                string += (f". From {uniform_value(child["old_value"])} to "
-                           f"{uniform_value(child["new_value"])}")
+                old_value = uniform_value(child["old_value"])
+                new_value = uniform_value(child["new_value"])
+                string += f". From {old_value} to {new_value}"
             strings.append(string)
     return "\n".join(strings)
 
