@@ -19,7 +19,7 @@ def form_string(nod):
     for child in nod:
         property = f"{child['path']}{child['name']}"
         status = child['status']
-        if status != "updated_dict" and status != "same":
+        if status != "nested" and status != "same":
             string = f"Property '{property}' was {status}"
             if status == "added":
                 value = to_str(child["value"])

@@ -1,28 +1,64 @@
-import json
-
-
 def stylish(dict_diff: dict):
-    #return dict_diff
-    return make_string(add_depth(dict_diff))
+    return "\n".join(make_string(add_depth(dict_diff)).replace
+                     ('\n\n', '\n').split("\n")[:-1])
 
 
 def make_string(tree):
-    spaces_per_level = 4
-    shift_left = 2
     result_string = ""
+    prev_depth = "start"
     for nod in tree:
-        shift = ' ' * (nod['depth'] * spaces_per_level - shift_left)
-        if nod["status"] == 'updated':
-            result_string += f"{shift}- {nod['name']}: {nod['old_value']}\n"
-            result_string += f"{shift}+ {nod['name']}: {nod['new_value']}\n"
-        if nod["status"] == 'same':
-            result_string += f"{shift}  {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'added':
-            result_string += f"{shift}+ {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'removed':
-            result_string += f"{shift}- {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'updated_dict':
-            result_string += f"{shift}  {nod['name']}: \n{make_string(nod['children'])}"
+        spaces_per_level = 4
+        shift_left = 2
+        depth = nod['depth']
+        status = nod["status"]
+        name = nod['name']
+        shift_before = ' ' * (depth * spaces_per_level - shift_left)
+        shift_after = ' ' * ((depth - 1) * spaces_per_level)
+        if depth != prev_depth:
+            result_string += "{\n"
+        if depth == prev_depth and result_string.endswith("}\n"):
+            result_string = \
+                "\n".join(result_string.split("\n")[:-2]) + \
+                "\n"  # delete bracket line between same depth nods
+        if status == \
+                'updated' and "children" in nod and \
+                isinstance(nod['old_value'], dict):
+            result_string += \
+                f"{shift_before}- {name}: {make_string(nod['children'])}\n"
+            result_string += \
+                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
+        if status == \
+                'updated' and "children" in nod and \
+                isinstance(nod['new_value'], dict):
+            result_string += \
+                f"{shift_before}- {name}: {to_str(nod['old_value'])}\n"
+            result_string += \
+                f"{shift_before}+ {name}: {make_string(nod['children'])}\n"
+        if status == 'updated' and "children" not in nod:
+            result_string += \
+                f"{shift_before}- {name}: {to_str(nod['old_value'])}\n"
+            result_string += \
+                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
+        if status == 'same' and "children" in nod:
+            result_string += \
+                f"{shift_before}  {name}: {make_string(nod['children'])}\n"
+        if status == 'same' and "children" not in nod:
+            result_string += f"{shift_before}  {name}: {to_str(nod['value'])}\n"
+        if status == 'added' and "children" in nod:
+            result_string +=\
+                f"{shift_before}+ {name}: {make_string(nod['children'])}\n"
+        if status == 'added' and "children" not in nod:
+            result_string += f"{shift_before}+ {name}: {to_str(nod['value'])}\n"
+        if status == 'removed' and "children" in nod:
+            result_string += \
+                f"{shift_before}- {name}: {make_string(nod['children'])}\n"
+        if status == 'removed' and "children" not in nod:
+            result_string += f"{shift_before}- {name}: {to_str(nod['value'])}\n"
+        if status == 'nested':
+            result_string += \
+                f"{shift_before}  {name}: {make_string(nod['children'])}"
+        result_string += shift_after + "}\n"
+        prev_depth = depth
     return result_string
 
 
@@ -34,41 +70,20 @@ def add_depth(tree):
             if "children" in child:
                 walk_(child.get("children"), new_depth)
         return tree
-    return walk_(tree, 0)
+
+    return walk_(tree, 1)
 
 
-"""
-def make_string(tree):
-    result_string = ""
-    for nod in tree:
-        if nod["status"] == 'updated':
-            result_string += f"- {nod['name']}: {nod['old_value']}"
-            new_dict[f"+ {nod['name']}"] = nod["new_value"]
-        if nod["status"] == 'same':
-            new_dict[f"**{nod['name']}"] = nod["value"]
-        if nod["status"] == 'added':
-            new_dict[f"+ {nod['name']}"] = nod["value"]
-        if nod["status"] == 'removed':
-            new_dict[f"- {nod['name']}"] = nod["value"]
-        if nod["status"] == 'updated_dict':
-            new_dict[f"**{nod['name']}"] = add_prefix_make_dict(nod["children"])
-    return new_dict
-def make_string(tree):
-    spaces_per_level = 4
-    shift_left = 2
-    result_string = ""
-    for nod in tree:
-        shift = ' ' * (nod['depth'] * spaces_per_level - shift_left)
-        if nod["status"] == 'updated':
-            result_string += f"{shift}- {nod['name']}: {nod['old_value']}\n"
-            result_string += f"{shift}+ {nod['name']}: {nod['new_value']}\n"
-        if nod["status"] == 'same':
-            result_string += f"{shift}  {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'added':
-            result_string += f"{shift}+ {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'removed':
-            result_string += f"{shift}- {nod['name']}: {nod['value']}\n"
-        if nod["status"] == 'updated_dict':
-            result_string += f"{shift}  {nod['name']}: \n{make_string(nod['children'])}"
-    return result_string 
-"""
+def to_str(value):
+    if value is False:
+        return "false"
+    if value is True:
+        return "true"
+    if value is None:
+        return "null"
+    if value == 0:
+        return "0"
+    if value == "0":
+        return value
+    else:
+        return value
