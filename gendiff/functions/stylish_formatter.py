@@ -36,18 +36,17 @@ def make_string(tree):
         if status == 'nested':
             result_string += \
                 f"{shift_before}  {name}: {make_string(nod['children'])}\n"
-        if ("children" in nod and status != 'nested'
-                and (status != 'updated'
-                     or (status == "updated"
-                         and isinstance(nod['new_value'], dict)))):
+        if "children" in nod and status != 'nested':
             result_string = (result_string.split(name)[0]
                              + f"{name}: {make_string(nod['children'])}\n")
-        if ("children" in nod and "old_value" in nod
-                and isinstance(nod["old_value"], dict)):
+        if isinstance(nod.get("old_value"), dict):
             result_string = (result_string.split(name)[0]
                              + f"{name}: {make_string(nod['children'])}\n")
             result_string += \
                 f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
+        if isinstance(nod.get("new_value"), dict):
+            result_string = (result_string.split(f"+ {name}")[0]
+                             + f"+ {name}: {make_string(nod['children'])}\n")
         result_string += shift_after + "}\n"
         prev_depth = depth
     return result_string
