@@ -20,43 +20,34 @@ def make_string(tree):
             result_string = \
                 "\n".join(result_string.split("\n")[:-2]) + \
                 "\n"  # delete bracket line between same depth nods
-        if status == \
-                'updated' and "children" in nod and \
-                isinstance(nod['old_value'], dict):
-            result_string += \
-                f"{shift_before}- {name}: {make_string(nod['children'])}\n"
-            result_string += \
-                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
-        if status == \
-                'updated' and "children" in nod and \
-                isinstance(nod['new_value'], dict):
-            result_string += \
-                f"{shift_before}- {name}: {to_str(nod['old_value'])}\n"
-            result_string += \
-                f"{shift_before}+ {name}: {make_string(nod['children'])}\n"
-        if status == 'updated' and "children" not in nod:
+        if status == 'updated':
             result_string += \
                 f"{shift_before}- {name}: {to_str(nod['old_value'])}\n"
             result_string += \
                 f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
-        if status == 'same' and "children" in nod:
+        if status == 'same':
             result_string += \
-                f"{shift_before}  {name}: {make_string(nod['children'])}\n"
-        if status == 'same' and "children" not in nod:
-            result_string += f"{shift_before}  {name}: {to_str(nod['value'])}\n"
-        if status == 'added' and "children" in nod:
-            result_string +=\
-                f"{shift_before}+ {name}: {make_string(nod['children'])}\n"
-        if status == 'added' and "children" not in nod:
+                f"{shift_before}  {name}: {to_str(nod['value'])}\n"
+        if status == 'added':
             result_string += f"{shift_before}+ {name}: {to_str(nod['value'])}\n"
-        if status == 'removed' and "children" in nod:
+        if status == 'removed':
             result_string += \
-                f"{shift_before}- {name}: {make_string(nod['children'])}\n"
-        if status == 'removed' and "children" not in nod:
-            result_string += f"{shift_before}- {name}: {to_str(nod['value'])}\n"
+                f"{shift_before}- {name}: {to_str(nod['value'])}\n"
         if status == 'nested':
             result_string += \
-                f"{shift_before}  {name}: {make_string(nod['children'])}"
+                f"{shift_before}  {name}: {make_string(nod['children'])}\n"
+        if ("children" in nod and status != 'nested'
+                and (status != 'updated'
+                     or (status == "updated"
+                         and isinstance(nod['new_value'], dict)))):
+            result_string = (result_string.split(name)[0]
+                             + f"{name}: {make_string(nod['children'])}\n")
+        if ("children" in nod and "old_value" in nod
+                and isinstance(nod["old_value"], dict)):
+            result_string = (result_string.split(name)[0]
+                             + f"{name}: {make_string(nod['children'])}\n")
+            result_string += \
+                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
         result_string += shift_after + "}\n"
         prev_depth = depth
     return result_string
