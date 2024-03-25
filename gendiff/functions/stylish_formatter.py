@@ -12,8 +12,8 @@ def make_string(tree):
         depth = nod['depth']
         status = nod["status"]
         name = nod['name']
-        shift_before = ' ' * (depth * spaces_per_level - shift_left)
-        shift_after = ' ' * ((depth - 1) * spaces_per_level)
+        shift_before_key = ' ' * (depth * spaces_per_level - shift_left)
+        shift_before_bracket = ' ' * ((depth - 1) * spaces_per_level)
         if depth != prev_depth:
             result_string += "{\n"
         if depth == prev_depth and result_string.endswith("}\n"):
@@ -21,35 +21,56 @@ def make_string(tree):
                 "\n".join(result_string.split("\n")[:-2]) + \
                 "\n"  # delete bracket line between same depth nods
         if status == 'updated':
-            result_string += \
-                f"{shift_before}- {name}: {to_str(nod['old_value'])}\n"
-            result_string += \
-                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
-        if status == 'same':
-            result_string += \
-                f"{shift_before}  {name}: {to_str(nod['value'])}\n"
-        if status == 'added':
-            result_string += f"{shift_before}+ {name}: {to_str(nod['value'])}\n"
-        if status == 'removed':
-            result_string += \
-                f"{shift_before}- {name}: {to_str(nod['value'])}\n"
-        if status == 'nested':
-            result_string += \
-                f"{shift_before}  {name}: {make_string(nod['children'])}\n"
-        if "children" in nod and status != 'nested':
-            result_string = (result_string.split(name)[0]
-                             + f"{name}: {make_string(nod['children'])}\n")
-        if isinstance(nod.get("old_value"), dict):
-            result_string = (result_string.split(name)[0]
-                             + f"{name}: {make_string(nod['children'])}\n")
-            result_string += \
-                f"{shift_before}+ {name}: {to_str(nod['new_value'])}\n"
-        if isinstance(nod.get("new_value"), dict):
-            result_string = (result_string.split(f"+ {name}")[0]
-                             + f"+ {name}: {make_string(nod['children'])}\n")
-        result_string += shift_after + "}\n"
+            values = get_value_updated(nod["old_value"],
+                                       nod["new_value"], nod.get("children"))
+            old_value, new_value = values
+            result_string += (shift_before_key + "- " + name + ": "
+                              + str(select_function(old_value)) + "\n")
+            result_string += (shift_before_key + "+ " + name + ": "
+                              + str(select_function(new_value)) + "\n")
+        else:
+            result_string\
+                += (shift_before_key
+                    + add_prefix(name, status) + ": "
+                    + str(select_function(select_value(nod.get("value"),
+                                                       nod.get("children"))))
+                    + "\n")
+        result_string += shift_before_bracket + "}\n"
         prev_depth = depth
     return result_string
+
+
+def select_function(value):
+    if isinstance(value, list):
+        return make_string(value)
+    else:
+        return to_str(value)
+
+
+def select_value(value, children):
+    if children:
+        return children
+    else:
+        return value
+
+
+def get_value_updated(old_value, new_value, children):
+    if isinstance(old_value, dict):
+        return children, new_value
+    if isinstance(new_value, dict):
+        return old_value, children
+    else:
+        return old_value, new_value
+
+
+def add_prefix(name, status):
+    if status == "removed":
+        prefix = "- "
+    elif status == "added":
+        prefix = "+ "
+    else:
+        prefix = "  "
+    return prefix + name
 
 
 def add_depth(tree):
