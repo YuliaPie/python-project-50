@@ -33,14 +33,7 @@
         "value": {
           "key5": "value5"
         },
-        "status": "added",
-        "children": [
-          {
-            "name": "key5",
-            "value": "value5",
-            "status": "same"
-          }
-        ]
+        "status": "added"
       },
       {
         "name": "setting6",
@@ -93,14 +86,7 @@
           "key": "value"
         },
         "new_value": "str",
-        "status": "updated",
-        "children": [
-          {
-            "name": "key",
-            "value": "value",
-            "status": "same"
-          }
-        ]
+        "status": "updated"
       }
     ],
     "status": "nested"
@@ -113,25 +99,7 @@
         "id": 45
       }
     },
-    "status": "removed",
-    "children": [
-      {
-        "name": "abc",
-        "value": 12345,
-        "status": "same"
-      },
-      {
-        "name": "deep",
-        "children": [
-          {
-            "name": "id",
-            "value": 45,
-            "status": "same"
-          }
-        ],
-        "status": "nested"
-      }
-    ]
+    "status": "removed"
   },
   {
     "name": "group3",
@@ -143,30 +111,6 @@
       },
       "fee": 100500
     },
-    "status": "added",
-    "children": [
-      {
-        "name": "deep",
-        "children": [
-          {
-            "name": "id",
-            "children": [
-              {
-                "name": "number",
-                "value": 45,
-                "status": "same"
-              }
-            ],
-            "status": "nested"
-          }
-        ],
-        "status": "nested"
-      },
-      {
-        "name": "fee",
-        "value": 100500,
-        "status": "same"
-      }
-    ]
+    "status": "added"
   }
 ]

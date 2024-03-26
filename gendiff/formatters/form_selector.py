@@ -1,6 +1,6 @@
-from gendiff.functions.plain_formatter import plain
-from gendiff.functions.stylish_formatter import stylish
-from gendiff.functions.json_formatter import to_json
+from gendiff.formatters.plain_formatter import plain
+from gendiff.formatters.stylish_formatter import stylish
+from gendiff.formatters.json_formatter import to_json
 
 
 def select_formatter(dict, format_name):

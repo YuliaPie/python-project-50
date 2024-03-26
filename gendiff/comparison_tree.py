@@ -22,12 +22,4 @@ def compare_dicts(dict1, dict2):
         elif old_value == new_value:
             dict_diff.append({"name": key, 'value': old_value,
                               'status': 'same'})
-        if isinstance(old_value, dict) and not \
-                isinstance(new_value, dict):  # for first nested
-            dict_diff[-1].update({'children': compare_dicts(old_value,
-                                                            old_value)})
-        if not isinstance(old_value, dict) and\
-                isinstance(new_value, dict):  # for second nested
-            dict_diff[-1].update({'children': compare_dicts(new_value,
-                                                            new_value)})
     return dict_diff
