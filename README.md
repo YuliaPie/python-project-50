@@ -39,4 +39,4 @@
 
 [![asciicast](https://asciinema.org/a/8f7ixlzf3bF39BFu1gLOezGyQ.svg)](https://asciinema.org/a/8f7ixlzf3bF39BFu1gLOezGyQ)
 
-[![asciicast](https://asciinema.org/a/D7DeVYhkPoGPp7jpld2ymsieu.svg)](https://asciinema.org/a/D7DeVYhkPoGPp7jpld2ymsieu)git
+[![asciicast](https://asciinema.org/a/D7DeVYhkPoGPp7jpld2ymsieu.svg)](https://asciinema.org/a/D7DeVYhkPoGPp7jpld2ymsieu)

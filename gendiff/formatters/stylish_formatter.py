@@ -1,4 +1,5 @@
 from gendiff.comparison_tree import compare_dicts
+from gendiff.constants import SPACES_PER_LEVEL, SHIFT_LEFT
 
 
 def stylish(dict_diff: dict):
@@ -6,12 +7,10 @@ def stylish(dict_diff: dict):
 
 
 def make_string(tree, depth=1):
-    def walk(nod, depth, result=""):
-        spaces_per_level = 4
-        shift_left = 2
-        for child in nod:
-            indent = (depth * spaces_per_level - shift_left) * " "
+    def walk(node, depth, result=""):
+        for child in node:
             new_depth = depth + 1
+            indent = make_indent(depth)
             result += "\n"
             if child['status'] == 'removed':
                 result += (indent + "- " + child["name"]
@@ -32,7 +31,8 @@ def make_string(tree, depth=1):
             elif child['status'] == 'same':
                 result += (indent + "  " + child["name"]
                            + ": " + str(to_str(child["value"], new_depth)))
-        return "{" + result + "\n" + spaces_per_level * (depth - 1) * " " + "}"
+        return "{" + result + "\n" + SPACES_PER_LEVEL * (depth - 1) * " " + "}"
+
     return walk(tree, depth, "")
 
 
@@ -51,3 +51,8 @@ def to_str(value, depth=0):
         return value
     else:
         return value
+
+
+def make_indent(depth):
+    indent = (depth * SPACES_PER_LEVEL - SHIFT_LEFT) * " "
+    return indent
