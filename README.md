@@ -6,6 +6,33 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/4142ce737f9a364bcd4e/maintainability)](https://codeclimate.com/github/YuliaPie/python-project-50/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/4142ce737f9a364bcd4e/test_coverage)](https://codeclimate.com/github/YuliaPie/python-project-50/test_coverage)
+### Gendiff
+
+Description
+
+Gendiff is a program that accepts the path to two files and outputs the differences between them.
+Accepts files with such extensions as json, yaml, yml. Processing of nested dictionaries is supported.
+It is also possible to set the output format.
+
+Installation and launch:
+
+- Clone the repository locally.
+- Run the following commands in the command line from the project root:
+* poetry build
+* poetry publish --dry-run (you may need to enter your username and password)
+* python3 -m pip install --user dist/*.whl
+
+- The program can be run from the command line with the following commands:
+
+* gendiff -h - Print help
+* gendiff filepath1.json filepath2.json - Run with the default (tree) result view
+
+* gendiff --format plain filepath1.json filepath2.json - Run with a flat result view
+* gendiff --format json filepath1.json filepath2.json - Run with a json result view
+
+Asciinema in the end of this readme show how to use thw application
+
+### Вычислитель отличий
 
 Описание
 
