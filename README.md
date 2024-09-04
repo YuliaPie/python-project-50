@@ -30,7 +30,7 @@ Installation and launch:
 * gendiff --format plain filepath1.json filepath2.json - Run with a flat result view
 * gendiff --format json filepath1.json filepath2.json - Run with a json result view
 
-Asciinema in the end of this readme show how to use thw application
+Asciinema in the end of this readme show how to use the application
 
 ### Вычислитель отличий
 
